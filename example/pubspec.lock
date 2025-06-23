@@ -288,7 +288,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.8"
-  onedrive_api:
+  one_drive_api:
     dependency: "direct main"
     description:
       path: ".."

@@ -21,7 +21,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  onedrive_api: ^0.0.1
+  one_drive_api: ^0.0.1
 ```
 
 ---
@@ -29,34 +29,37 @@ dependencies:
 ## 🚀 Getting Started
 
 ```dart
-import 'package:onedrive_api/onedrive_api.dart';
-import 'package:oauth2restclient/oauth2restclient.dart';
+import 'package:one_drive_api/one_drive_api.dart';
 
 void main() async {
   final account = OAuth2Account();
 
-  // Add Microsoft as an OAuth2 provider
-  account.addProvider(Microsoft(
+  // OneDrive용 OAuth2 provider 등록
+  account.addProvider(OneDrive(
     clientId: "YOUR_CLIENT_ID",
     redirectUri: "YOUR_REDIRECT_URI",
     scopes: [
-      "Files.ReadWrite",
-      "User.Read"
+      "User.Read",
+      "Files.ReadWrite.All",
+      "Files.Read.All",
+      "openid",
+      "email",
+      "offline_access",
     ],
   ));
 
-  // Login or load token
-  final token = await account.newLogin("microsoft");
+  // 로그인 또는 토큰 로드
+  final token = await account.newLogin("onedrive");
   final client = await account.createClient(token);
 
-  // Initialize API
+  // API 인스턴스 생성
   final onedrive = OneDriveRestApi(client);
 
-  // Get drive info
+  // 드라이브 정보 가져오기
   final drive = await onedrive.getDrive();
   print("Drive ID: ${drive.id}");
 
-  // List files in root directory
+  // 루트 폴더 파일 목록 조회
   final items = await onedrive.listChildren("/");
 
   for (final item in items.value) {
@@ -128,7 +131,7 @@ await onedrive.delete("/Documents/Old Folder");
 
 ---
 
-## 🛤 Path-based API
+## �� Path-based API
 
 이 라이브러리는 직관적인 경로 기반 API를 제공합니다:
 
