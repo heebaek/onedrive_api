@@ -22,10 +22,9 @@ abstract interface class OneDriveApi {
 
   /// 폴더를 생성합니다.
   ///
-  /// [parentPath]는 부모 폴더의 경로입니다 (예: "/Documents").
-  /// [name]은 생성할 폴더의 이름입니다.
+  /// [path]는 생성할 폴더의 전체 경로입니다 (예: "/Documents/newfolder").
   /// Returns a [OneDriveDriveItem] containing the metadata of the created folder.
-  Future<OneDriveDriveItem> createFolder(String parentPath, String name);
+  Future<OneDriveDriveItem> createFolder(String path);
 
   /// 파일을 업로드합니다.
   ///
@@ -42,24 +41,14 @@ abstract interface class OneDriveApi {
   /// 파일이나 폴더를 이동합니다.
   ///
   /// [path]는 이동할 파일이나 폴더의 경로입니다 (예: "/Documents/file.txt").
-  /// [newParentPath]는 새로운 부모 폴더의 경로입니다 (예: "/Pictures").
-  /// [newName]은 새로운 이름입니다 (선택사항).
-  Future<OneDriveDriveItem> move(
-    String path,
-    String newParentPath,
-    String? newName,
-  );
+  /// [newPath]는 새로운 전체 경로입니다 (예: "/Pictures/newfile.txt").
+  Future<OneDriveDriveItem> move(String path, String newPath);
 
   /// 파일이나 폴더를 복사합니다.
   ///
   /// [path]는 복사할 파일이나 폴더의 경로입니다 (예: "/Documents/file.txt").
-  /// [newParentPath]는 새로운 부모 폴더의 경로입니다 (예: "/Backup").
-  /// [newName]은 새로운 이름입니다 (선택사항).
-  Future<OneDriveDriveItem> copy(
-    String path,
-    String newParentPath,
-    String? newName,
-  );
+  /// [newPath]는 새로운 전체 경로입니다 (예: "/Backup/file_copy.txt").
+  Future<void> copy(String path, String newPath);
 
   /// 현재 사용자의 계정 정보를 가져옵니다.
   Future<OneDriveUser> getCurrentUser();

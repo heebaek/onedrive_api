@@ -21,7 +21,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  onedrive_rest_api: ^0.0.1
+  onedrive_rest_api: ^0.0.2
 ```
 
 ---
@@ -93,10 +93,10 @@ await onedrive.upload("/Documents/report.pdf", fileStream);
 - **Create Folder**:
 ```dart
 // 루트에 폴더 생성
-await onedrive.createFolder("/", 'New Folder');
+await onedrive.createFolder("/New Folder");
 
 // 특정 폴더 안에 하위 폴더 생성
-await onedrive.createFolder("/Documents", 'Work');
+await onedrive.createFolder("/Documents/Work");
 ```
 
 - **Download File**:
@@ -107,17 +107,24 @@ final stream = await onedrive.download("/Documents/file.txt");
 
 - **Copy File**:
 ```dart
-// 파일 복사
-await onedrive.copy("/Documents/file.txt", "/Backup");
+// 파일 복사 (같은 이름)
+await onedrive.copy("/Documents/file.txt", "/Backup/file.txt");
+
+// 파일 복사 (다른 이름)
+await onedrive.copy("/Documents/file.txt", "/Backup/file_copy.txt");
+// ⚠️ 복사는 비동기 작업입니다. 복사 완료까지 시간이 걸릴 수 있습니다.
 ```
 
 - **Move/Rename File**:
 ```dart
-// 파일 이동
-await onedrive.move("/Documents/file.txt", "/Pictures");
+// 파일 이동 (같은 이름)
+await onedrive.move("/Documents/file.txt", "/Pictures/file.txt");
 
 // 파일 이동하면서 이름 변경
-await onedrive.move("/Documents/file.txt", "/Pictures", "new_name.txt");
+await onedrive.move("/Documents/file.txt", "/Pictures/new_name.txt");
+
+// 같은 폴더에서 이름만 변경
+await onedrive.move("/Documents/file.txt", "/Documents/new_name.txt");
 ```
 
 - **Delete File**:
@@ -133,12 +140,9 @@ await onedrive.delete("/Documents/Old Folder");
 
 ## 🛤 Path-based API
 
-이 라이브러리는 직관적인 경로 기반 API를 제공합니다:
-
-- **절대 경로**: `/`로 시작하는 경로 (예: `/Documents/file.txt`)
-- **루트 디렉토리**: `/`는 OneDrive의 루트 디렉토리를 나타냅니다
-- **폴더 경로**: `/Documents`, `/Pictures` 등
-- **파일 경로**: `/Documents/report.pdf`, `/Pictures/photo.jpg` 등
+- 모든 주요 함수는 **경로(path)만** 받습니다. (ID 기반 아님)
+- 루트로 복사/이동/생성 시 경로는 `/` 또는 `""`(빈 문자열)로 처리하면 됩니다.
+- copy/move는 반환값이 없으며, copy는 비동기 작업이므로 바로 복사본이 보이지 않을 수 있습니다.
 
 ### 경로 예제
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.2
+
+*API parameters simplified to use full paths
+  * `createFolder(parentPath, name)` → `createFolder(path)`
+  * `move(path, newParentPath, newName)` → `move(path, newPath)`
+  * `copy(path, newParentPath, newName)` → `copy(path, newPath)`
+
 ## 0.0.1
 
 * Initial release of the OneDrive API client

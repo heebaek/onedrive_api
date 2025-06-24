@@ -21,6 +21,22 @@ class OneDriveRestApi implements OneDriveApi {
     return encodedSegments.join('/');
   }
 
+  /// 경로를 부모 경로와 이름으로 분리합니다.
+  ///
+  /// [path]는 분리할 경로입니다 (예: "/Documents/file.txt").
+  /// Returns a tuple with (parentPath, name).
+  (String, String) _splitPath(String path) {
+    final segments = path.split('/').where((segment) => segment.isNotEmpty);
+    if (segments.isEmpty) {
+      throw ArgumentError('Invalid path: path cannot be empty');
+    }
+
+    final parentPath = segments.take(segments.length - 1).join('/');
+    final name = segments.last;
+
+    return (parentPath, name);
+  }
+
   @override
   Future<Stream<List<int>>> download(String path) async {
     final encodedPath = _encodePath(path);
@@ -54,12 +70,18 @@ class OneDriveRestApi implements OneDriveApi {
   }
 
   @override
-  Future<OneDriveDriveItem> createFolder(String parentPath, String name) async {
+  Future<OneDriveDriveItem> createFolder(String path) async {
+    // path에서 부모 경로와 폴더명 분리
+    final (parentPath, folderName) = _splitPath(path);
+
     final encodedPath = _encodePath(parentPath);
+    var url =
+        '$_baseUrl/me/drive/root${encodedPath.isEmpty ? '' : ':/$encodedPath:'}/children';
+
     final response = await client.postJson(
-      '$_baseUrl/me/drive/root:/$encodedPath:/children',
+      url,
       body: OAuth2JsonBody({
-        'name': name,
+        'name': folderName,
         'folder': {},
         '@microsoft.graph.conflictBehavior': 'rename',
       }),
@@ -100,19 +122,22 @@ class OneDriveRestApi implements OneDriveApi {
   }
 
   @override
-  Future<OneDriveDriveItem> move(
-    String path,
-    String newParentPath,
-    String? newName,
-  ) async {
+  Future<OneDriveDriveItem> move(String path, String newPath) async {
     final encodedPath = _encodePath(path);
-    final encodedNewParentPath = _encodePath(newParentPath);
 
-    final body = <String, dynamic>{
-      'parentReference': {'path': '/drive/root:$encodedNewParentPath'},
+    // newPath에서 부모 경로와 파일명 분리
+    final (newParentPath, newName) = _splitPath(newPath);
+
+    final body = <String, dynamic>{};
+
+    body['parentReference'] = {
+      'path':
+          newParentPath.isEmpty
+              ? '/drive/root:'
+              : '/drive/root:/$newParentPath',
     };
 
-    if (newName != null) {
+    if (newName.isNotEmpty) {
       body['name'] = newName;
     }
 
@@ -124,27 +149,29 @@ class OneDriveRestApi implements OneDriveApi {
   }
 
   @override
-  Future<OneDriveDriveItem> copy(
-    String path,
-    String newParentPath,
-    String? newName,
-  ) async {
+  Future<void> copy(String path, String newPath) async {
     final encodedPath = _encodePath(path);
-    final encodedNewParentPath = _encodePath(newParentPath);
 
-    final body = <String, dynamic>{
-      'parentReference': {'path': '/drive/root:$encodedNewParentPath'},
+    // newPath에서 부모 경로와 파일명 분리
+    final (newParentPath, newName) = _splitPath(newPath);
+
+    final body = <String, dynamic>{};
+
+    body['parentReference'] = {
+      'path':
+          newParentPath.isEmpty ? '/drive/root:' : '/drive/root:$newParentPath',
     };
 
-    if (newName != null) {
+    if (newName.isNotEmpty) {
       body['name'] = newName;
     }
 
-    final response = await client.postJson(
+    var response = await client.post(
       '$_baseUrl/me/drive/root:/$encodedPath:/copy',
       body: OAuth2JsonBody(body),
     );
-    return OneDriveDriveItem.fromJson(response);
+
+    response.ensureSuccess();
   }
 
   @override
