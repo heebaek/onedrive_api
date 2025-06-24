@@ -284,11 +284,11 @@ packages:
     dependency: transitive
     description:
       name: oauth2restclient
-      sha256: "8ca95ef488425dffac94e1818b7bdb1075b1231e2ff400e0c58eb087bae25da3"
+      sha256: "4522861da28f412f05e6411bf72e76dc54bac888724480f1de795258cef299fb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.8"
-  one_drive_api:
+    version: "0.0.9"
+  onedrive_rest_api:
     dependency: "direct main"
     description:
       path: ".."

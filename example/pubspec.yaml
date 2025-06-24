@@ -37,7 +37,7 @@ dependencies:
   
   flutter_dotenv: ^5.2.1
 
-  one_drive_api:
+  onedrive_rest_api:
     path: ../
 
 

@@ -1,4 +1,4 @@
-name: one_drive_api
+name: onedrive_rest_api
 description: A Dart client for the OneDrive API that provides easy access to OneDrive's file operations including upload, download, copy, move, and more.
 version: 0.0.1
 homepage: https://github.com/bobaman/onedrive_api_client
@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  oauth2restclient: ^0.0.8
+  oauth2restclient: ^0.0.9
 
 dev_dependencies:
   flutter_test:

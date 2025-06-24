@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:one_drive_api/one_drive_api.dart';
+import 'package:onedrive_rest_api/onedrive_rest_api.dart';
 
 void main() async {
   await dotenv.load();
@@ -61,11 +61,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final account = OAuth2Account(appPrefix: "dropbox_api_client");
-  final service = "onedrive";
+  final service = "microsoft";
 
   @override
   void initState() {
-    var onedrive = OneDrive(
+    var ms = Microsoft(
       clientId: dotenv.env["ONEDRIVE_CLIENT_ID"]!,
       redirectUri: "aircomix://${dotenv.env["ONEDRIVE_CLIENT_ID"]!}/",
       scopes: [
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (Platform.isMacOS) {
-      onedrive = OneDrive(
+      ms = Microsoft(
         clientId: dotenv.env["ONEDRIVE_CLIENT_ID"]!,
         redirectUri: "http://localhost:8713/pobpob",
         scopes: [
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    account.addProvider(onedrive);
+    account.addProvider(ms);
 
     super.initState();
   }
