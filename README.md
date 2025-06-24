@@ -1,4 +1,4 @@
-# 📂 OneDriveApi
+# 📂 OneDriveRestApi
 
 A Dart package that provides convenient access to the OneDrive API, built on top of `oauth2restclient`.
 
@@ -21,7 +21,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  one_drive_api: ^0.0.1
+  onedrive_rest_api: ^0.0.1
 ```
 
 ---
@@ -29,13 +29,13 @@ dependencies:
 ## 🚀 Getting Started
 
 ```dart
-import 'package:one_drive_api/one_drive_api.dart';
+import 'package:onedrive_rest_api/onedrive_rest_api.dart';
 
 void main() async {
   final account = OAuth2Account();
 
-  // OneDrive용 OAuth2 provider 등록
-  account.addProvider(OneDrive(
+  // Microsoft OAuth2 provider 등록
+  account.addProvider(Microsoft(
     clientId: "YOUR_CLIENT_ID",
     redirectUri: "YOUR_REDIRECT_URI",
     scopes: [
@@ -49,7 +49,7 @@ void main() async {
   ));
 
   // 로그인 또는 토큰 로드
-  final token = await account.newLogin("onedrive");
+  final token = await account.newLogin("microsoft");
   final client = await account.createClient(token);
 
   // API 인스턴스 생성
@@ -131,7 +131,7 @@ await onedrive.delete("/Documents/Old Folder");
 
 ---
 
-## �� Path-based API
+## 🛤 Path-based API
 
 이 라이브러리는 직관적인 경로 기반 API를 제공합니다:
 
